@@ -1,0 +1,175 @@
+Exercise 1:  
+void BFS()
+{
+    if (root == NULL) return;
+    queue <Node*> q;
+    q.push(root);
+    while (!q.empty()){
+        Node* current = q.front();
+        cout << current->value;
+        q.pop();
+
+        if (current->pLeft) {
+            q.push(current->pLeft);
+        }
+
+        if (current->pRight) {
+            q.push(current->pRight);
+        }
+        if (q.size() >= 1) cout<<" ";
+    }
+}
+Exercise 2:
+static pair<int, int> longestPathSumHelper(BTNode* root) {
+        if (root == nullptr) {
+            return {0, 0}; // giá trị đầu tiên là chiều dài đường đi
+                           // giá trị thứ 2 là tổng các phần tử
+        }
+        // root = NULL -> path = 0, sum = 0;
+        if (root->left == nullptr && root->right == nullptr) {
+            return {1, root->val};
+        }
+        // Nếu chỉ có root -> path = 1; sum = root ->val;
+        auto leftSum = longestPathSumHelper(root->left); // gọi đệ quy left subtree
+        auto rightSum = longestPathSumHelper(root->right); // gọi đệ quy right subtree
+        // so sánh độ dài của cây con trái và phải.
+        if (leftSum.first > rightSum.first) {
+            return {leftSum.first + 1, leftSum.second + root->val};
+        } else if (leftSum.first < rightSum.first) {
+            return {rightSum.first + 1, rightSum.second + root->val};
+        } else {
+            return {leftSum.first + 1, max(leftSum.second, rightSum.second) + root->val};
+        }
+    }
+
+    static int longestPathSum(BTNode* root) {
+        auto result = longestPathSumHelper(root);
+        return result.second;
+    }
+Exercise 3:
+BTNode *lowestAncestorUtil(BTNode *root, int a, int b) {
+    if (root == NULL) {
+        return NULL;
+    }
+
+    if (root->val == a || root->val == b) {
+        return root;
+    }
+
+    BTNode *leftNode = lowestAncestorUtil(root->left, a, b);
+    BTNode *rightNode = lowestAncestorUtil(root->right, a, b);
+
+    if (leftNode && rightNode) {
+        return root;
+    }
+
+    return (leftNode != NULL) ? leftNode : rightNode;
+}
+
+int lowestAncestor(BTNode *root, int a, int b) {
+    BTNode *ancestor = lowestAncestorUtil(root, a, b);
+    return ancestor->val;
+}
+Exercise 4:
+int sumDigitPathUtil(BTNode* node, int sum) {
+    if (node == NULL) {
+        return 0;
+    }
+    sum = (sum * 10 + node->val) % 27022001;
+    if (node->left == NULL && node->right == NULL) {
+        return sum;
+    }
+    int leftSum = sumDigitPathUtil(node->left, sum);
+    int rightSum = sumDigitPathUtil(node->right, sum);
+    return (leftSum + rightSum) % 27022001;
+}
+
+int sumDigitPath(BTNode* root) {
+    return sumDigitPathUtil(root, 0);
+}
+Exercise 5:
+int countTwoChildrenNodeHelper(Node* root){
+    if(root == nullptr)
+        return 0;
+    if(root->pLeft && root->pRight)
+        return 1 + countTwoChildrenNodeHelper(root->pLeft) + countTwoChildrenNodeHelper(root->pRight);
+    return countTwoChildrenNodeHelper(root->pLeft) + countTwoChildrenNodeHelper(root->pRight);
+}
+
+int countTwoChildrenNode()
+{
+    return countTwoChildrenNodeHelper(root);
+}
+Exercise 6:
+int getHeightHelp(Node* root){
+    if (root == NULL) return 0;
+    if (root->pLeft == NULL && root -> pRight == NULL) return 1;
+    return 1 + max(getHeightHelp(root -> pLeft),getHeightHelp(root->pRight));
+}
+
+int getHeight() {
+    // TODO: return height of the binary tree.
+    return getHeightHelp(root);
+    
+}
+
+    string preOrderHelper(Node* node) {
+        if (node == nullptr)
+            return "";
+
+        string result = "";
+        result += to_string(node->value) + " ";
+        result += preOrderHelper(node->pLeft);
+        result += preOrderHelper(node->pRight);
+
+        return result;
+    }
+
+    string preOrder() {
+        return preOrderHelper(root);
+    }
+
+    string inOrderHelper(Node* node) {
+        if (node == nullptr)
+            return "";
+
+        string result = "";
+        result += inOrderHelper(node->pLeft);
+        result += to_string(node->value) + " ";
+        result += inOrderHelper(node->pRight);
+
+        return result;
+    }
+
+    string inOrder() {
+        return inOrderHelper(root);
+    }
+
+    string postOrderHelper(Node* node) {
+        if (node == nullptr)
+            return "";
+
+        string result = "";
+        result += postOrderHelper(node->pLeft);
+        result += postOrderHelper(node->pRight);
+        result += to_string(node->value) + " ";
+
+        return result;
+    }
+
+    string postOrder() {
+        return postOrderHelper(root);
+    }
+   Exercise 7:
+   int sumOfLeafsHelper(Node* root){
+        if(root == nullptr)
+            return 0;
+        if(root->pLeft == nullptr && root->pRight == nullptr)
+            return root->value;
+        return sumOfLeafsHelper(root->pLeft) + sumOfLeafsHelper(root->pRight);
+    }
+
+    int sumOfLeafs(){
+        return sumOfLeafsHelper(root);
+    }
+
